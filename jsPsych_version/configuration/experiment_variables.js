@@ -6,24 +6,27 @@
 
 // ----- CUSTOMISE THE STIMULI AND RESPONSES -----
 // locate the stimuli that will be used in the experiment
-var fix_stim = 'images/fix.png';
-var go_stim1 = 'images/go_left.png';
-var go_stim2 = 'images/go_right.png';
-var stop_stim1 = 'images/stop_left.png';
-var stop_stim2 = 'images/stop_right.png';
+var keyboard = 'img/keyboard.png'
+var fix_stim = 'img/fix.png';
+var garden_prac = 'img/PixelFlowerPatch.png';
+var garden_stim1 = 'img/flowerpatch.png';
+var garden_stim2 = 'img/flowerpatch.png';
+var garden_stim3 = 'img/flowerpatch.png';
 
 
 // define the appropriate response (key) for each stimulus
 // (this will also be used to set the allowed response keys)
-
-var cresp_stim1 = 'leftarrow';
-var cresp_stim2 = 'rightarrow';
-
+var resp_prac = 'uparrow';
+var resp_stim1 = 'leftarrow';
+var resp_stim2 = 'downarrow';
+var resp_stim3 = 'rightarrow';
 
 // here you can change the names of the stimuli in the data file
 
+var choice_prac = 'up';
 var choice_stim1 = 'left';
-var choice_stim2 = 'right';
+var choice_stim2 = 'down';
+var choice_stim3 = 'right';
 
 
 // ----- CUSTOMISE THE BASIC DESIGN -----
