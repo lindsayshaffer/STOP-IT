@@ -7,96 +7,65 @@ AUTHORS: Luc Vermeylen & Frederick Verbruggen (2019)
 DESCRIPTION: This is the jsPsych version of the stop-signal task
 -->
 
-<head> <!-- import the jsPsych core library, specific plugins, jquery and some other scripts-->
-
-  <title>Prize Garden</title> <!-- defines a title in the browser tab -->
-
-  <script src="js/jspsych-6.0.5/jspsych.js"></script> <!-- jsPsych core library -->
-
-  <script src="js/jspsych-6.0.5/plugins/jspsych-instructions.js"></script> <!-- plugins define specific tasks, e.g., presenting instructions -->
-
+<head>                                                                                            <!-- import the jsPsych core library, specific plugins, jquery and some other scripts-->
+  <title>Prize Garden</title>                                                                     <!-- defines a title in the browser tab -->
+  <script src="js/jspsych-6.0.5/jspsych.js"></script>                                             <!-- jsPsych core library -->
+  <script src="js/jspsych-6.0.5/plugins/jspsych-instructions.js"></script>                        <!-- plugins define specific tasks, e.g., presenting instructions -->
   <script src="js/jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
-
-  <script src="js/jspsych-6.0.5/plugins/jspsych-survey-text-beta-6.1.js"></script> <!-- beta 6.1 version has the 'input required' function for text fields -->
-
+  <script src="js/jspsych-6.0.5/plugins/jspsych-survey-text-beta-6.1.js"></script>                <!-- beta 6.1 version has the 'input required' function for text fields -->
   <script src="js/jspsych-6.0.5/plugins/jspsych-survey-multi-choice.js"></script>
-
   <script src="js/jspsych-6.0.5/plugins/jspsych-call-function.js"></script>
   <script src="js/jspsych-6.0.5/plugins/jspsych-fullscreen.js"></script>
-
-  <script src="js/jquery-1.7.1.min.js"></script> <!-- the jquery library is used to communicate with the server (to store the data) through "AJAX" and PHP -->
-
-  <script src="js/bowser.js"></script> <!-- a browser and operating system detector -->
-
-  <script src="js/sprintf.js"></script> <!-- format variables in a string, used for customizable feedback strings in which the variables are not yet declared -->
-  <script src="js/custom-stop-signal-plugin.js"></script> <!-- custom plugin for the main stop-signal trial based on the image-keyboard-response plugin -->
-
-  <script src="js/jspsych-detect-held-down-keys.js"></script> <!-- custom plugin for detecting if a key is being held down -->
-  <script src="configuration/experiment_variables.js"></script> <!-- parameters to configure the experiment -->
-
-  <script src="configuration/text_variables.js"></script> <!-- holds all the text variables for easy modification/translation -->
-
-  <link href="js/jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link> <!-- standard jsPsych css stylesheet -->
-
+  <script src="js/jquery-1.7.1.min.js"></script>                                                  <!-- the jquery library is used to communicate with the server (to store the data) through "AJAX" and PHP -->
+  <script src="js/bowser.js"></script>                                                            <!-- a browser and operating system detector -->
+  <script src="js/sprintf.js"></script>                                                           <!-- format variables in a string, used for customizable feedback strings in which the variables are not yet declared -->
+  <script src="js/custom-stop-signal-plugin.js"></script>                                         <!-- custom plugin for the main stop-signal trial based on the image-keyboard-response plugin -->
+  <script src="js/jspsych-detect-held-down-keys.js"></script>                                     <!-- custom plugin for detecting if a key is being held down -->
+  <script src="configuration/experiment_variables.js"></script>                                   <!-- parameters to configure the experiment -->
+  <script src="configuration/text_variables.js"></script>                                         <!-- holds all the text variables for easy modification/translation -->
+  <link href="js/jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>          <!-- standard jsPsych css stylesheet -->
 </head>
-
 <body></body>
-
 <script>
 
   /* #########################################################################
-
   Initialize variables
-
   ######################################################################### */
 
-  // Initialize some important variables
+// Initialize some important variables
 
-  var timeline = []; // this array stores the events we want to run in the experiment
+  var timeline = [];                                                                              // this array stores the events we want to run in the experiment
+  var trial_ind = 1;                                                                              // trial indexing variable starts at 1 for convenience
+  var block_ind = 0;                                                                              // block indexing variables: block 0 is considered to be the practice block
 
-  var trial_ind = 1; // trial indexing variable starts at 1 for convenience
+  var focus = 'focus';                                                                            // tracks if the current tab/window is the active tab/window, initially the current tab should be focused
+  var fullscr_ON = 'no';                                                                          // tracks fullscreen activity, initially not activated
+  var redirect_timeout = 1500;                                                                    // set this so that data is saved before redirect!
 
-  var block_ind = 0; // block indexing variables: block 0 is considered to be the practice block
-
-  var focus = 'focus'; // tracks if the current tab/window is the active tab/window, initially the current tab should be focused
-  var fullscr_ON = 'no'; // tracks fullscreen activity, initially not activated
-  var redirect_timeout = 1500; // set this so that data is saved before redirect!
-
-  // is the experiment running from a server or not? (this determines if data is saved on server or offline)
-  if (document.location.host) { // returns your host or null
+// is the experiment running from a server or not? (this determines if data is saved on server or offline)
+  
+  if (document.location.host) {                                                                   // returns your host or null
     online = true;
   } else {
     online = false;
   };
 
-  // detect visitor variables with the bowser js library (/js/bowser.js)
+// detect visitor variables with the bowser js library (/js/bowser.js)
 
-  jsPsych.data.addProperties({ // add these variables to all rows of the datafile
-
+  jsPsych.data.addProperties({                                                                    // add these variables to all rows of the datafile
     browser_name: bowser.name, browser_version: bowser.version,
-
     os_name: bowser.osname, os_version: bowser.osversion,
-
-    tablet: String(bowser.tablet), mobile: String(bowser.mobile),
- // convert explicitly to string so that "undefined" (no response) does not lead to empty cells in the datafile
+    tablet: String(bowser.tablet), mobile: String(bowser.mobile),                                 // convert explicitly to string so that "undefined" (no response) does not lead to empty cells in the datafile
     screen_resolution: screen.width + ' x ' + screen.height,
-
-    window_resolution: window.innerWidth + ' x ' + window.innerHeight, // this will be updated throughout the experiment
-
+    window_resolution: window.innerWidth + ' x ' + window.innerHeight,                            // this will be updated throughout the experiment
   });
 
-
-
-  // define the images to be loaded, the actual preloading occurs in the jsPsych.init function at the bottom
+// define the images to be loaded, the actual preloading occurs in the jsPsych.init function at the bottom
 
   var pre_load_stimuli = [fix_stim, go_stim1, go_stim2, stop_stim1, stop_stim2];
 
-
-
   /* #########################################################################
-
-  Create the design based on the input from 'experiment_variables.js'
-
+         Create the design based on the input from 'experiment_variables.js'
   ######################################################################### */
 
   // Since we have two stimuli, the number of trials of the basic design = 2 * nstim
